@@ -1,0 +1,123 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/router";
+
+const hardcodedCredentials = {
+  username: "admin",
+  password: "securepass",
+};
+
+export default function AdminDashboard() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (
+      form.username === hardcodedCredentials.username &&
+      form.password === hardcodedCredentials.password
+    ) {
+      setLoggedIn(true);
+    } else {
+      setError("Invalid credentials. Please try again.");
+    }
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  if (!loggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Card className="w-full max-w-sm">
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={form.username}
+                onChange={handleChange}
+                required
+              />
+              <Input
+                type="password"
+                name="password"
+                placeholde9r="Password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Manage Subsidiaries</h2>
+            <p className="mt-2">View, edit, or delete subsidiaries in your portfolio.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Subsidiaries Management")}>Go</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Revenue Overview</h2>
+            <p className="mt-2">See revenue trends, charts, and breakdowns by subsidiary.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Revenue Page")}>View</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Add New Subsidiary</h2>
+            <p className="mt-2">Quickly add a new business under your holding company.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Add Form")}>Add</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Contact Messages</h2>
+            <p className="mt-2">View submissions from your website's contact form.</p>
+            <Button className="mt-4" onClick={() => alert("Open Contact Inbox")}>Inbox</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Analytics</h2>
+            <p className="mt-2">Track performance KPIs, engagement, and marketing reach.</p>
+            <Button className="mt-4" onClick={() => alert("Go to Analytics Dashboard")}>Open</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Logout</h2>
+            <p className="mt-2">End your session and return to homepage.</p>
+            <Button className="mt-4" variant="destructive" onClick={() => setLoggedIn(false)}>Logout</Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
