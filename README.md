@@ -1,10 +1,3 @@
-{
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  }
-}
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -66,6 +59,3 @@ export default function Dashboard() {
     </div>
   );
 }
-git add .
-git commit -m "Added admin dashboard"
-git push origin main
