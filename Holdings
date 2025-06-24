@@ -2,224 +2,126 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/router";
 
-const subsidiariesData = [
-  {
-    name: "GreenTech Energy",
-    description: "Focused on renewable energy solutions and sustainable infrastructure development.",
-  },
-  {
-    name: "UrbanEats",
-    description: "A growing network of urban restaurants and cloud kitchens innovating local cuisine.",
-  },
-  {
-    name: "AutoShine Car Care",
-    description: "Automotive care and detailing centers with eco-friendly practices and high-end services.",
-  },
-  {
-    name: "SmartBuild Developments",
-    description: "Real estate and construction company focused on smart housing and green buildings.",
-  },
-];
+const hardcodedCredentials = {
+  username: "admin",
+  password: "securepass",
+};
 
-export default function VersatileHoldingsApp() {
-  const [subsidiaries, setSubsidiaries] = useState(subsidiariesData);
-  const [search, setSearch] = useState("");
+export default function AdminDashboard() {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [form, setForm] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
+  const router = useRouter();
 
-  const filteredSubsidiaries = subsidiaries.filter((sub) =>
-    sub.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (
+      form.username === hardcodedCredentials.username &&
+      form.password === hardcodedCredentials.password
+    ) {
+      setLoggedIn(true);
+    } else {
+      setError("Invalid credentials. Please try again.");
+    }
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  if (!loggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <Card className="w-full max-w-sm">
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <Input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={form.username}
+                onChange={handleChange}
+                required
+              />
+              <Input
+                type="password"
+                name="password"
+                placeholde9r="Password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+              {error && <p className="text-red-500 text-sm">{error}</p>}
+              <Button type="submit" className="w-full">
+                Login
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 text-gray-800">
-      <header className="bg-black text-white py-6 text-center">
-        <h1 className="text-3xl font-bold">Versatile Holdings</h1>
-        <p className="text-sm mt-2">Leveraging Synergies. Synchronizing Growth.</p>
-      </header>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
 
-      <nav className="bg-gray-800 text-white flex justify-center space-x-6 py-3">
-        <a href="#about" className="hover:underline">About Us</a>
-        <a href="#subsidiaries" className="hover:underline">Subsidiaries</a>
-        <a href="#contact" className="hover:underline">Contact</a>
-      </nav>
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Manage Subsidiaries</h2>
+            <p className="mt-2">View, edit, or delete subsidiaries in your portfolio.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Subsidiaries Management")}>Go</Button>
+          </CardContent>
+        </Card>
 
-      <section id="about" className="px-4 py-8 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">About Us</h2>
-        <p>
-          Versatile Holdings is a dynamic and forward-thinking holding company committed to fostering
-          innovation and diversification across multiple industries. Our mission is to create value by
-          acquiring and managing a diverse range of subsidiaries, each offering unique products and
-          services.
-        </p>
-      </section>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Revenue Overview</h2>
+            <p className="mt-2">See revenue trends, charts, and breakdowns by subsidiary.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Revenue Page")}>View</Button>
+          </CardContent>
+        </Card>
 
-      <section id="subsidiaries" className="px-4 py-8 max-w-5xl mx-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">Our Subsidiaries</h2>
-          <Input
-            placeholder="Search subsidiaries..."
-            className="w-60"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredSubsidiaries.map((sub, index) => (
-            <Card key={index} className="shadow-md">
-              <CardContent className="p-4">
-                <h3 className="text-xl font-bold mb-2">{sub.name}</h3>
-                <p>{sub.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Add New Subsidiary</h2>
+            <p className="mt-2">Quickly add a new business under your holding company.</p>
+            <Button className="mt-4" onClick={() => alert("Navigate to Add Form")}>Add</Button>
+          </CardContent>
+        </Card>
 
-      <section id="contact" className="px-4 py-8 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
-        <form className="space-y-4">
-          <Input type="text" placeholder="Your Name" required />
-          <Input type="email" placeholder="Your Email" required />
-          <Input type="text" placeholder="Message" required />
-          <Button type="submit">Send Message</Button>
-        </form>
-      </section>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Contact Messages</h2>
+            <p className="mt-2">View submissions from your website's contact form.</p>
+            <Button className="mt-4" onClick={() => alert("Open Contact Inbox")}>Inbox</Button>
+          </CardContent>
+        </Card>
 
-      <footer className="bg-black text-white text-center py-4 mt-10">
-        &copy; 2025 Versatile Holdings Company. All rights reserved.
-      </footer>
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Analytics</h2>
+            <p className="mt-2">Track performance KPIs, engagement, and marketing reach.</p>
+            <Button className="mt-4" onClick={() => alert("Go to Analytics Dashboard")}>Open</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Logout</h2>
+            <p className="mt-2">End your session and return to homepage.</p>
+            <Button className="mt-4" variant="destructive" onClick={() => setLoggedIn(false)}>Logout</Button>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
-git init
-git remote add origin https://github.com/your-username/your-repo.git
 git add .
-git commit -m "Initial commit"
-git push -u origin main
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Versatile Holdings Company - Diversifying industries, synchronizing growth across subsidiaries.">
-  <title>Versatile Holdings</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
-    }
-    header {
-      background-color: #1a1a1a;
-      color: #fff;
-      padding: 1.5em;
-      text-align: center;
-    }
-    nav {
-      background-color: #333;
-      display: flex;
-      justify-content: center;
-      padding: 1em 0;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 1.5em;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      padding: 2em;
-      max-width: 1100px;
-      margin: auto;
-    }
-    .intro {
-      background: #fff;
-      padding: 2em;
-      margin-bottom: 2em;
-      border-radius: 8px;
-    }
-    .subsidiaries {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5em;
-    }
-    .card {
-      background: #fff;
-      padding: 1.5em;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    footer {
-      text-align: center;
-      background-color: #1a1a1a;
-      color: #ccc;
-      padding: 1em;
-      margin-top: 3em;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Versatile Holdings</h1>
-    <p>Leveraging Synergies. Synchronizing Growth.</p>
-  </header>
-  <nav>
-    <a href="#about">About Us</a>
-    <a href="#subsidiaries">Subsidiaries</a>
-    <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
-  </nav>
+git commit -m "Added admin dashboard"
+git push origin main
 
-  <section class="intro" id="about">
-    <h2>About Us</h2>
-    <p>Versatile Holdings is a dynamic and forward-thinking holding company committed to fostering innovation and diversification across multiple industries. Our mission is to create value by acquiring and managing a diverse range of subsidiaries, each offering unique products and services. We focus on strategic investments, sustainability, and long-term growth to empower the next generation of businesses.</p>
-  </section>
-
-  <section class="intro" id="services">
-    <h2>What We Offer</h2>
-    <ul>
-      <li>Investment and acquisition management</li>
-      <li>Strategic business consulting</li>
-      <li>Operational and financial oversight for subsidiaries</li>
-      <li>Cross-sector innovation and partnership development</li>
-    </ul>
-  </section>
-
-  <section id="subsidiaries">
-    <h2>Our Subsidiaries</h2>
-    <div class="subsidiaries">
-      <div class="card">
-        <h3>GreenTech Energy</h3>
-        <p>Focused on renewable energy solutions and sustainable infrastructure development.</p>
-      </div>
-      <div class="card">
-        <h3>UrbanEats</h3>
-        <p>A growing network of urban restaurants and cloud kitchens innovating local cuisine.</p>
-      </div>
-      <div class="card">
-        <h3>AutoShine Car Care</h3>
-        <p>Automotive care and detailing centers with eco-friendly practices and high-end services.</p>
-      </div>
-      <div class="card">
-        <h3>SmartBuild Developments</h3>
-        <p>Real estate and construction company focused on smart housing and green buildings.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="intro" id="contact">
-    <h2>Contact Us</h2>
-    <p>Email: info@versatileholdings.com</p>
-    <p>Phone: +1 (123) 456-7890</p>
-    <p>Head Office: 123 Innovation Avenue, Business City, Country</p>
-  </section>
-
-  <footer>
-    &copy; 2025 Versatile Holdings Company. All rights reserved.
-  </footer>
-</body>
-</html>
