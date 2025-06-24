@@ -1,123 +1,71 @@
-import React, { useState } from "react";
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
+}
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useRouter } from "next/router";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const hardcodedCredentials = {
-  username: "admin",
-  password: "securepass",
-};
+const data = [
+  { name: 'Q1', revenue: 24000 },
+  { name: 'Q2', revenue: 13980 },
+  { name: 'Q3', revenue: 9800 },
+  { name: 'Q4', revenue: 14800 },
+];
 
-export default function AdminDashboard() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [form, setForm] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
-  const router = useRouter();
+export default function Dashboard() {
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-3xl font-bold mb-6 text-center">Holdings Company Dashboard</h1>
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (
-      form.username === hardcodedCredentials.username &&
-      form.password === hardcodedCredentials.password
-    ) {
-      setLoggedIn(true);
-    } else {
-      setError("Invalid credentials. Please try again.");
-    }
-  };
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mb-6">
+        <Card className="bg-white shadow">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Total Subsidiaries</h2>
+            <p className="text-2xl mt-2">4</p>
+          </CardContent>
+        </Card>
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+        <Card className="bg-white shadow">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Active Projects</h2>
+            <p className="text-2xl mt-2">12</p>
+          </CardContent>
+        </Card>
 
-  if (!loggedIn) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <Card className="w-full max-w-sm">
-          <CardContent className="p-6">
-            <h2 className="text-2xl font-bold mb-4 text-center">Admin Login</h2>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <Input
-                type="text"
-                name="username"
-                placeholder="Username"
-                value={form.username}
-                onChange={handleChange}
-                required
-              />
-              <Input
-                type="password"
-                name="password"
-                placeholde9r="Password"
-                value={form.password}
-                onChange={handleChange}
-                required
-              />
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-              <Button type="submit" className="w-full">
-                Login
-              </Button>
-            </form>
+        <Card className="bg-white shadow">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Revenue (YTD)</h2>
+            <p className="text-2xl mt-2">$95,000</p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white shadow">
+          <CardContent className="p-4">
+            <h2 className="text-lg font-semibold">Investors</h2>
+            <p className="text-2xl mt-2">38</p>
           </CardContent>
         </Card>
       </div>
-    );
-  }
 
-  return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Admin Dashboard</h1>
-
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Manage Subsidiaries</h2>
-            <p className="mt-2">View, edit, or delete subsidiaries in your portfolio.</p>
-            <Button className="mt-4" onClick={() => alert("Navigate to Subsidiaries Management")}>Go</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Revenue Overview</h2>
-            <p className="mt-2">See revenue trends, charts, and breakdowns by subsidiary.</p>
-            <Button className="mt-4" onClick={() => alert("Navigate to Revenue Page")}>View</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Add New Subsidiary</h2>
-            <p className="mt-2">Quickly add a new business under your holding company.</p>
-            <Button className="mt-4" onClick={() => alert("Navigate to Add Form")}>Add</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Contact Messages</h2>
-            <p className="mt-2">View submissions from your website's contact form.</p>
-            <Button className="mt-4" onClick={() => alert("Open Contact Inbox")}>Inbox</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Analytics</h2>
-            <p className="mt-2">Track performance KPIs, engagement, and marketing reach.</p>
-            <Button className="mt-4" onClick={() => alert("Go to Analytics Dashboard")}>Open</Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-semibold">Logout</h2>
-            <p className="mt-2">End your session and return to homepage.</p>
-            <Button className="mt-4" variant="destructive" onClick={() => setLoggedIn(false)}>Logout</Button>
-          </CardContent>
-        </Card>
+      <div className="bg-white p-4 shadow rounded">
+        <h2 className="text-xl font-semibold mb-4">Quarterly Revenue Overview</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={data}>
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="revenue" fill="#4f46e5" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
 }
+git add .
+git commit -m "Added admin dashboard"
+git push origin main
